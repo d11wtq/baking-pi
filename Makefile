@@ -30,3 +30,9 @@ $(BUILD)$(TARGET).elf: $(BUILD)$(TARGET).o
 # Assemble the kernel.img.o object file
 $(BUILD)$(TARGET).o:
 	$(ARMGNU)-as $(SOURCE)*.s -o $(BUILD)$(TARGET).o
+
+# Remove built products and intermediate files
+clean:
+	rm -f $(BUILD)$(TARGET).elf
+	rm -f $(BUILD)$(TARGET).o
+	rm -f $(TARGET)

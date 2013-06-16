@@ -57,13 +57,30 @@ _start:
   mov r1,#1
   /* left-shift to just the 16th bit, for the 16th pin */
   lsl r1,#16
+
+blink_on:
   /* store value to r0, offset 40 bytes (turn off) */
   str r1,[r0,#40]
+  mov r2,#0x3F0000
 
-  /* declare a label for a loop (which does nothing) */
-loop$:
-  /* branch to loop$ label, thus loop forever */
-  b loop$
+  /* waste time subtracting 1 from big number */
+wait1$:
+  sub r2,#1
+  cmp r2,#0
+  bne wait1$
+
+blink_off:
+  /* store value to r0, offset 28 bytes (turn on) */
+  str r1,[r0,#28]
+  mov r2,#0x3F0000
+
+  /* waste time subtracting 1 from big number */
+wait2$:
+  sub r2,#1
+  cmp r2,#0
+  bne wait2$
+  /* branch back to on state */
+  b blink_on
 
   /* address of GPIO controller */
 gpio_ctrl:
