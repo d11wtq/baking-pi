@@ -15,6 +15,8 @@ SOURCE = source/
 BUILD  = build/
 # Output file name
 TARGET = kernel.img
+# Linker script name
+LINKER = kernel.ld
 
 # Build all targets
 all: $(TARGET)
@@ -25,7 +27,7 @@ $(TARGET): $(BUILD)$(TARGET).elf
 
 # Build the kernel.img.elf file, in ELF executable format
 $(BUILD)$(TARGET).elf: $(BUILD)$(TARGET).o
-	$(ARMGNU)-ld -Ttext=0x0 -o $(BUILD)$(TARGET).elf $(BUILD)$(TARGET).o
+	$(ARMGNU)-ld -o $(BUILD)$(TARGET).elf $(BUILD)$(TARGET).o -T $(LINKER)
 
 # Assemble the kernel.img.o object file
 $(BUILD)$(TARGET).o:
