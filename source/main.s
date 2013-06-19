@@ -31,7 +31,7 @@ main:
   /* start the stack at position 8000 (allow some space) */
   mov sp,#0x8000
 
-  /* enable the led */
+  /* enable output on the led */
   mov r0,#16
   mov r1,#1
   bl SetGpioFunction
@@ -45,7 +45,6 @@ mainLoop$:
   mov r1,mask
   bl SetGpio
   bl WaitForInterval
-  /* repeat forever */
   b mainLoop$
   .unreq mask
 
