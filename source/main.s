@@ -31,38 +31,33 @@ main:
   /* start the stack at position 8000 (allow some space) */
   mov sp,#0x8000
 
-enable_led:
+  /* enable the led */
   mov r0,#16
   mov r1,#1
   bl SetGpioFunction
 
-loop$:
+mainLoop$:
 
-blink_on:
+  /* blink the led on */
+  bl WaitForInterval
   mov r0,#16
   mov r1,#0
   bl SetGpio
 
-  mov r2,#0x3F0000
-  /* waste time subtracting 1 from big number */
-wait1$:
-  sub r2,#1
-  cmp r2,#0
-  bne wait1$
-
-blink_off:
+  /* blink the led off */
+  bl WaitForInterval
   mov r0,#16
   mov r1,#1
   bl SetGpio
 
-  mov r2,#0x3F0000
-  /* waste time subtracting 1 from big number */
-wait2$:
-  sub r2,#1
-  cmp r2,#0
-  bne wait2$
-
   /* repeat forever */
-  b loop$
+  b mainLoop$
+
+/* Sleep for 2 seconds */
+WaitForInterval:
+  push {lr}
+  ldr r0,=2000
+  bl SleepForDelay
+  pop {pc}
 
 /* -*- end of file -*- */
