@@ -36,22 +36,18 @@ main:
   mov r1,#1
   bl SetGpioFunction
 
+  onFlag .req r4
+  mov mask,#0
 mainLoop$:
-
-  /* blink the led on */
-  bl WaitForInterval
+  /* toggle the led state */
+  eor mask,mask,#1
   mov r0,#16
-  mov r1,#0
+  mov r1,mask
   bl SetGpio
-
-  /* blink the led off */
   bl WaitForInterval
-  mov r0,#16
-  mov r1,#1
-  bl SetGpio
-
   /* repeat forever */
   b mainLoop$
+  .unreq mask
 
 /* Sleep for 2 seconds */
 WaitForInterval:
