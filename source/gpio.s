@@ -7,20 +7,16 @@
    Hardware:     Raspberry Pi Model B
 */
 
-  /* global function declaration */
-  .globl GetGpioAddress
-
-  /* Returns the address of the GPIO controller */
+/* Returns the address of the GPIO controller */
+.globl GetGpioAddress
 GetGpioAddress:
   /* r0 is always the return value, as per ABI interface */
   ldr r0,=0x20200000
   /* pc is always the next instruction run (i.e. branch) */
   mov pc,lr
 
-  /* global function declaration */
-  .globl SetGpioFunction
-
-  /* Enable a given function on a given GPIO pin */
+/* Enable a given function on a given GPIO pin */
+.globl SetGpioFunction
 SetGpioFunction:
   /* Explanation: The GPIO controller allocates 4 bytes for
      each 10 pins. There are 54 pins, ~ 6 x 4 = 24 bytes of
@@ -84,10 +80,8 @@ functionLoop$:
   /* take the caller back off the stack and return */
   pop {pc}
 
-  /* global function declaration */
-  .globl SetGpio
-
-  /* Turns on or off a given GPIO pin */
+/* Turns on or off a given GPIO pin */
+.globl SetGpio
 SetGpio:
   /* aliases for the register numbers, for clarity */
   pinNum .req r0

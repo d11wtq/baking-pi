@@ -13,20 +13,18 @@
    Hardware:     Raspberry Pi Model B
 */
 
-  /* place all code at the start of the output */
-  .section .init
+/* place all code at the start of the output */
+.section .init
 
-  /* required declaration for the linker */
-  .globl _start
-
-  /* executable entry point */
+/* executable entry point */
+.globl _start
 _start:
   b main
 
-  /* text section contains the main code */
-  .section .text
+/* text section contains the main code */
+.section .text
 
-  /* main routine */
+/* main routine */
 main:
   /* start the stack at position 8000 (allow some space) */
   mov sp,#0x8000
@@ -36,23 +34,42 @@ main:
   mov r1,#1
   bl SetGpioFunction
 
-  onFlag .req r4
-  mov mask,#0
+  ptrn .req r4
+  mask .req r5
+  /* create a pointer to the sequence bitmap */
+  ldr ptrn,=blink_sequence
+  /* load the bitmap into the register */
+  ldr ptrn,[ptrn]
+  /* the current bit to mask */
+  mov mask,#1
 mainLoop$:
-  /* toggle the led state */
-  eor mask,mask,#1
   mov r0,#16
+  /* set the led state to the result of masking */
   mov r1,mask
+  and r1,ptrn
   bl SetGpio
   bl WaitForInterval
+  /* mov the bit in the mask for next iteration */
+  lsl mask,#1
+  /* if the mask overflowed, reset it to 1 */
+  movcs mask,#1
   b mainLoop$
+  .unreq ptrn
   .unreq mask
 
-/* Sleep for 2 seconds */
+/* Sleep for 250 milliseconds */
 WaitForInterval:
   push {lr}
-  ldr r0,=2000
+  ldr r0,=250
   bl SleepForDelay
   pop {pc}
+
+/* constants are kept in the .data section */
+.section .data
+
+/* morse code pattern: 1 = led on, 0 = led off */
+.align 2 /* keep in neat 4-byte (2^2) blocks */
+blink_sequence:
+  .int 0b11111111101010100010001000101010
 
 /* -*- end of file -*- */

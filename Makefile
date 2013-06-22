@@ -27,7 +27,7 @@ $(TARGET): $(BUILD)$(TARGET).elf
 
 # Build the kernel.img.elf file, in ELF executable format
 $(BUILD)$(TARGET).elf: $(BUILD)$(TARGET).o
-	$(ARMGNU)-ld -o $(BUILD)$(TARGET).elf $(BUILD)$(TARGET).o -T $(LINKER)
+	$(ARMGNU)-ld --no-undefined -o $(BUILD)$(TARGET).elf $(BUILD)$(TARGET).o -T $(LINKER)
 
 # Assemble the kernel.img.o object file
 $(BUILD)$(TARGET).o:
