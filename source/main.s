@@ -42,6 +42,7 @@ main:
   ldr ptrn,[ptrn]
   /* the current bit to mask */
   mov mask,#1
+  lsl mask,#31
 mainLoop$:
   mov r0,#16
   /* set the led state to the result of masking */
@@ -49,10 +50,8 @@ mainLoop$:
   and r1,ptrn
   bl SetGpio
   bl WaitForInterval
-  /* mov the bit in the mask for next iteration */
-  lsl mask,#1
-  /* if the mask overflowed, reset it to 1 */
-  movcs mask,#1
+  /* rotate the bit in the mask for next iteration */
+  ror mask,#1
   b mainLoop$
   .unreq ptrn
   .unreq mask
@@ -70,6 +69,6 @@ WaitForInterval:
 /* morse code pattern: 1 = led on, 0 = led off */
 .align 2 /* keep in neat 4-byte (2^2) blocks */
 blink_sequence:
-  .int 0b11111111101010100010001000101010
+  .int 0b11111010101110001000100011101010
 
 /* -*- end of file -*- */
